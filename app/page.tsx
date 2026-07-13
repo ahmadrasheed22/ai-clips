@@ -1,94 +1,85 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { PromptBox } from "../components/PromptBox";
-import { LoadingIndicator, loadingStates } from "../components/LoadingIndicator";
-import { VideoPlayer } from "../components/VideoPlayer";
-import { CaptionCard } from "../components/CaptionCard";
+import { useState } from "react";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [loadingIndex, setLoadingIndex] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
-  
-  const resultRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerate = () => {
-    if (!prompt) return;
-    setIsGenerating(true);
-    setIsComplete(false);
-    setLoadingIndex(0);
+    if (!prompt.trim()) return;
+    
+    console.log("Generating video for prompt:", prompt);
+    setIsLoading(true);
 
-    // Smoothly scroll to the result area right as generation starts
     setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-
-    // Mock progress simulation
-    let currentIdx = 0;
-    const interval = setInterval(() => {
-      currentIdx++;
-      if (currentIdx < loadingStates.length) {
-        setLoadingIndex(currentIdx);
-      } else {
-        clearInterval(interval);
-        setIsGenerating(false);
-        setIsComplete(true);
-      }
-    }, 1200); // 1.2s per state for demonstration
+      setIsLoading(false);
+    }, 2000);
   };
-
-  const handleReset = () => {
-    setPrompt("");
-    setIsComplete(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // Scroll smoothly to video when generation finishes (in case they scrolled back up)
-  useEffect(() => {
-    if (isComplete) {
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [isComplete]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-50 dark:bg-zinc-950 font-sans text-gray-900 dark:text-gray-100 p-8 sm:p-20 transition-colors duration-500">
-      <main className="flex flex-col w-full max-w-4xl flex-1 items-center justify-start gap-10">
-        
-        {/* Header */}
-        <div className="text-center space-y-4 pt-10">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            AI-Clips
+    <main className="min-h-screen bg-neutral-950 text-neutral-100 p-8 flex flex-col items-center font-sans">
+      <div className="max-w-4xl w-full space-y-8 mt-12">
+        <header className="text-center space-y-4">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-2">
+            AI Director Studio
           </h1>
-          <p className="text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            Describe your vision, and we'll script, generate, and narrate a complete professional video.
+          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            Bring your ideas to life. Describe your scene below and let the AI direct the video for you.
           </p>
+        </header>
+
+        <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:border-neutral-700">
+          <textarea
+            className="w-full bg-neutral-950 border border-neutral-800 rounded-2xl p-5 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-300 text-lg leading-relaxed shadow-inner"
+            rows={5}
+            placeholder="Describe your scene in detail... (e.g. A neon-lit cyberpunk city alleyway at midnight, cinematic lighting, 8k resolution)"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={handleGenerate}
+              disabled={isLoading || !prompt.trim()}
+              className="px-8 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-3 text-lg"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Generating...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Generate Video</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Main Input Area (Always Visible) */}
-        <PromptBox 
-          prompt={prompt} 
-          setPrompt={setPrompt} 
-          isGenerating={isGenerating} 
-          onGenerate={handleGenerate} 
-        />
-
-        {/* Loading and Completion Wrapper */}
-        <div ref={resultRef} className="w-full max-w-3xl flex flex-col items-center justify-center min-h-[50px]">
-          
-          {/* Loading State */}
-          {isGenerating && <LoadingIndicator loadingIndex={loadingIndex} />}
-
-          {/* Completion View */}
-          {isComplete && (
-            <div className="w-full flex flex-col gap-8 animate-in fade-in duration-700 py-10">
-              <VideoPlayer />
-              <CaptionCard onReset={handleReset} />
+        <section className="mt-12 bg-neutral-900 border border-neutral-800 border-dashed rounded-3xl p-12 min-h-[400px] flex flex-col items-center justify-center transition-all duration-300">
+          <div className="text-center space-y-6">
+            <div className="w-20 h-20 bg-neutral-950 border border-neutral-800 rounded-full flex items-center justify-center mx-auto shadow-inner">
+              <svg className="w-10 h-10 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+              </svg>
             </div>
-          )}
-        </div>
-      </main>
-    </div>
+            <div>
+              <h3 className="text-2xl font-semibold text-neutral-300 mb-2">No Content Generated Yet</h3>
+              <p className="text-neutral-500 max-w-md mx-auto text-lg leading-relaxed">
+                Your generated scenes, audio, and images will appear here once you enter a prompt and click Generate.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
