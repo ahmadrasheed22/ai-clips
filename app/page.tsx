@@ -2,27 +2,36 @@
 
 import { useState } from "react";
 import GenerationForm from "@/components/GenerationForm";
-import SceneList, { Scene } from "@/components/SceneList";
+import VideoPlayer from "@/components/VideoPlayer";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedScenes, setGeneratedScenes] = useState<Scene[]>([]);
+
+  const [generatedScenes, setGeneratedScenes] = useState<any[]>([]);
+  const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
 
   const handleGenerate = async (prompt: string) => {
     console.log("Generating video for prompt:", prompt);
     setIsLoading(true);
+    setFinalVideoUrl(null);
+    setGeneratedScenes([]);
 
     try {
-      const response = await fetch("http://localhost:5000/test-assets", {
-        method: "GET",
+      const response = await fetch("http://localhost:5000/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
       });
       
       const data = await response.json();
       if (data && data.scenes) {
         setGeneratedScenes(data.scenes);
       }
+      if (data && data.videoUrl) {
+        setFinalVideoUrl(data.videoUrl);
+      }
     } catch (error) {
-      console.error("Failed to generate scenes:", error);
+      console.error("Failed to generate video:", error);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +50,10 @@ export default function Home() {
         </header>
 
         <GenerationForm onGenerate={handleGenerate} isLoading={isLoading} />
-        <SceneList generatedScenes={generatedScenes} />
+        
+
+
+        <VideoPlayer videoUrl={finalVideoUrl} />
       </div>
     </main>
   );
