@@ -17,11 +17,17 @@ export default function Home() {
     setGeneratedScenes([]);
 
     try {
+      // Set a 10-minute timeout to match the backend and prevent premature aborts
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 600 * 1000);
+
       const response = await fetch("http://localhost:5000/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       
       const data = await response.json();
       if (data && data.scenes) {
