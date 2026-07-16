@@ -9,7 +9,7 @@ interface GenerationFormProps {
 
 export default function GenerationForm({ onGenerate, isLoading }: GenerationFormProps) {
   const [prompt, setPrompt] = useState("");
-  const [duration, setDuration] = useState<number>(5);
+  const [duration, setDuration] = useState<number>(10);
   const [quality, setQuality] = useState<string>("1080p");
 
   const handleGenerateClick = () => {
@@ -34,7 +34,7 @@ export default function GenerationForm({ onGenerate, isLoading }: GenerationForm
               Duration
             </label>
             <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
-              {[3, 5, 8, 10, 15].map((val) => (
+              {[3, 8, 10, 15].map((val) => (
                 <button
                   key={val}
                   type="button"
