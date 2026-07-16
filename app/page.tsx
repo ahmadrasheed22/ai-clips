@@ -1,44 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import GenerationForm from "@/components/GenerationForm";
 import VideoPlayer from "@/components/VideoPlayer";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-
-  const [generatedScenes, setGeneratedScenes] = useState<any[]>([]);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
 
-  const handleGenerate = async (prompt: string) => {
-    console.log("Generating video for prompt:", prompt);
+  useEffect(() => {
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
+  }, []);
+
+  const handleGenerate = async (prompt: string, duration: number, quality: string) => {
+    console.log("Generating video for prompt:", prompt, "duration:", duration, "quality:", quality);
     setIsLoading(true);
+    setStatusMessage("Initializing generation...");
+    setError(null);
     setFinalVideoUrl(null);
-    setGeneratedScenes([]);
+
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+    }
 
     try {
-      // Set a 10-minute timeout to match the backend and prevent premature aborts
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 600 * 1000);
-
       const response = await fetch("http://localhost:5000/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-        signal: controller.signal,
+        body: JSON.stringify({ prompt, duration, quality }),
       });
-      clearTimeout(timeoutId);
-      
-      const data = await response.json();
-      if (data && data.scenes) {
-        setGeneratedScenes(data.scenes);
+
+      if (!response.ok) {
+        throw new Error(`Failed to start generation: ${response.statusText}`);
       }
-      if (data && data.videoUrl) {
-        setFinalVideoUrl(data.videoUrl);
+
+      const { jobId } = await response.json();
+      if (!jobId) {
+        throw new Error("No jobId returned from the server.");
       }
-    } catch (error) {
-      console.error("Failed to generate video:", error);
-    } finally {
+
+      console.log("Job created with ID:", jobId);
+
+      const eventSource = new EventSource(`http://localhost:5000/generate/status/${jobId}`);
+      eventSourceRef.current = eventSource;
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log("SSE event received:", data);
+
+          if (data.type === "progress") {
+            setStatusMessage(data.message);
+          } else if (data.type === "completed") {
+            setFinalVideoUrl(data.videoUrl);
+            setIsLoading(false);
+            eventSource.close();
+          } else if (data.type === "failed") {
+            setError(data.error || "An error occurred during video generation.");
+            setIsLoading(false);
+            eventSource.close();
+          }
+        } catch (e) {
+          console.error("Failed to parse event data:", e);
+        }
+      };
+
+      eventSource.onerror = (err) => {
+        console.error("EventSource error:", err);
+        setError("Connection lost. Video generation might still be running. Please retry if it takes too long.");
+        setIsLoading(false);
+        eventSource.close();
+      };
+    } catch (err: any) {
+      console.error("Failed to generate video:", err);
+      setError(err.message || "Failed to start video generation.");
       setIsLoading(false);
     }
   };
@@ -56,8 +98,30 @@ export default function Home() {
         </header>
 
         <GenerationForm onGenerate={handleGenerate} isLoading={isLoading} />
-        
 
+        {isLoading && statusMessage && (
+          <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl flex flex-col items-center justify-center space-y-4 animate-pulse-slow">
+            <div className="flex items-center space-x-3">
+              <span className="relative flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-purple-600"></span>
+              </span>
+              <span className="text-lg font-medium text-neutral-200">
+                {statusMessage}
+              </span>
+            </div>
+            <div className="w-full bg-neutral-950 rounded-full h-1.5 overflow-hidden border border-neutral-800 relative">
+              <div className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full animate-progress-loading"></div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-950/30 border border-red-900/50 rounded-3xl p-6 text-center space-y-2">
+            <p className="text-red-400 font-medium">Generation Failed</p>
+            <p className="text-sm text-neutral-400">{error}</p>
+          </div>
+        )}
 
         <VideoPlayer videoUrl={finalVideoUrl} />
       </div>
