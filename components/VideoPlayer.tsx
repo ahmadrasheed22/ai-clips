@@ -18,7 +18,7 @@ export default function VideoPlayer({
           controls 
           autoPlay 
           className="w-full h-full object-contain"
-          src={`http://localhost:5000${videoUrl}`}
+          src={videoUrl}
         />
       </div>
       <div className="mt-6 text-center">
