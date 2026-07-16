@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import GenerationForm from "@/components/GenerationForm";
 import VideoPlayer from "@/components/VideoPlayer";
 
@@ -9,26 +9,13 @@ export default function Home() {
   const [statusMessage, setStatusMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-    };
-  }, []);
 
   const handleGenerate = async (prompt: string, duration: number, quality: string) => {
     console.log("Generating video for prompt:", prompt, "duration:", duration, "quality:", quality);
     setIsLoading(true);
-    setStatusMessage("Initializing generation...");
+    setStatusMessage("Generating video via Fal.ai...");
     setError(null);
     setFinalVideoUrl(null);
-
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-    }
 
     try {
       const response = await fetch("http://localhost:5000/generate", {
@@ -38,49 +25,20 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to start generation: ${response.statusText}`);
+        throw new Error(`Failed to generate video: ${response.statusText}`);
       }
 
-      const { jobId } = await response.json();
-      if (!jobId) {
-        throw new Error("No jobId returned from the server.");
+      const data = await response.json();
+      if (!data?.videoUrl) {
+        throw new Error("No videoUrl returned from the server.");
       }
 
-      console.log("Job created with ID:", jobId);
-
-      const eventSource = new EventSource(`http://localhost:5000/generate/status/${jobId}`);
-      eventSourceRef.current = eventSource;
-
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          console.log("SSE event received:", data);
-
-          if (data.type === "progress") {
-            setStatusMessage(data.message);
-          } else if (data.type === "completed") {
-            setFinalVideoUrl(data.videoUrl);
-            setIsLoading(false);
-            eventSource.close();
-          } else if (data.type === "failed") {
-            setError(data.error || "An error occurred during video generation.");
-            setIsLoading(false);
-            eventSource.close();
-          }
-        } catch (e) {
-          console.error("Failed to parse event data:", e);
-        }
-      };
-
-      eventSource.onerror = (err) => {
-        console.error("EventSource error:", err);
-        setError("Connection lost. Video generation might still be running. Please retry if it takes too long.");
-        setIsLoading(false);
-        eventSource.close();
-      };
+      console.log("Video URL received:", data.videoUrl);
+      setFinalVideoUrl(data.videoUrl);
     } catch (err: any) {
       console.error("Failed to generate video:", err);
-      setError(err.message || "Failed to start video generation.");
+      setError(err.message || "Failed to generate video.");
+    } finally {
       setIsLoading(false);
     }
   };
