@@ -10,8 +10,22 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
 
-  const handleGenerate = async (prompt: string, duration: number, quality: string) => {
-    console.log("Generating video for prompt:", prompt, "duration:", duration, "quality:", quality);
+  const handleGenerate = async (
+    prompt: string,
+    totalDuration: number,
+    quality: string,
+    aspectRatio: string,
+  ) => {
+    console.log(
+      "Generating video for prompt:",
+      prompt,
+      "totalDuration:",
+      totalDuration,
+      "quality:",
+      quality,
+      "aspectRatio:",
+      aspectRatio,
+    );
     setIsLoading(true);
     setStatusMessage("Generating video via Fal.ai...");
     setError(null);
@@ -21,7 +35,7 @@ export default function Home() {
       const response = await fetch("http://localhost:5000/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, duration, quality }),
+        body: JSON.stringify({ prompt, totalDuration, aspectRatio, quality }),
       });
 
       if (!response.ok) {
