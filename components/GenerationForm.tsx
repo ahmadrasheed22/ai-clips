@@ -3,18 +3,19 @@
 import { useState } from "react";
 
 interface GenerationFormProps {
-  onGenerate: (prompt: string, duration: number, quality: string) => void;
+  onGenerate: (prompt: string, totalDuration: number, quality: string, aspectRatio: string) => void;
   isLoading: boolean;
 }
 
 export default function GenerationForm({ onGenerate, isLoading }: GenerationFormProps) {
   const [prompt, setPrompt] = useState("");
-  const [duration, setDuration] = useState<number>(10);
+  const [totalDuration, setTotalDuration] = useState<number>(10);
   const [quality, setQuality] = useState<string>("1080p");
+  const [aspectRatio, setAspectRatio] = useState<string>("16:9");
 
   const handleGenerateClick = () => {
     if (!prompt.trim()) return;
-    onGenerate(prompt, duration, quality);
+    onGenerate(prompt, totalDuration, quality, aspectRatio);
   };
 
   return (
@@ -34,18 +35,44 @@ export default function GenerationForm({ onGenerate, isLoading }: GenerationForm
               Duration
             </label>
             <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
-              {[3, 8, 10, 15].map((val) => (
+              {[5, 10, 15].map((val) => (
                 <button
                   key={val}
                   type="button"
-                  onClick={() => setDuration(val)}
+                  onClick={() => setTotalDuration(val)}
                   className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    duration === val
+                    totalDuration === val
                       ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
                       : "text-neutral-400 hover:text-neutral-200"
                   }`}
                 >
                   {val}s
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Aspect Ratio Selector */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+              Aspect Ratio
+            </label>
+            <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
+              {[
+                { label: "16:9 (Landscape)", value: "16:9" },
+                { label: "9:16 (Portrait)", value: "9:16" },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setAspectRatio(opt.value)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    aspectRatio === opt.value
+                      ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
+                      : "text-neutral-400 hover:text-neutral-200"
+                  }`}
+                >
+                  {opt.label}
                 </button>
               ))}
             </div>
