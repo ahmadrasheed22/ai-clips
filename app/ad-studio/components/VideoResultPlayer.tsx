@@ -30,24 +30,24 @@ export function VideoResultPlayer({
   };
 
   return (
-    <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
-      <div className="flex items-center justify-between border-b border-neutral-800 pb-4">
+    <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800/80 rounded-3xl p-4 md:p-5 space-y-3 shadow-2xl h-full max-h-full overflow-y-auto custom-scrollbar w-full flex flex-col justify-between">
+      <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
         <div>
-          <h3 className="text-xl font-bold text-neutral-100">{title}</h3>
-          <p className="text-xs text-purple-400 font-medium mt-0.5">
+          <h3 className="text-base font-bold text-neutral-100">{title}</h3>
+          <p className="text-[11px] text-purple-400 font-medium">
             ✨ Product Ad Generation Complete
           </p>
         </div>
         <button
           onClick={onReset}
-          className="text-xs font-semibold px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors border border-neutral-700"
+          className="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors border border-neutral-700"
         >
           + Create Another Ad
         </button>
       </div>
 
       {/* Video MP4 Player Container */}
-      <div className="relative w-full max-w-sm mx-auto aspect-[9/16] rounded-2xl overflow-hidden border border-neutral-700/80 shadow-2xl bg-black">
+      <div className="relative w-full max-w-[240px] mx-auto aspect-[9/16] rounded-2xl overflow-hidden border border-neutral-700/80 shadow-2xl bg-black">
         <video
           src={fullVideoUrl}
           controls
