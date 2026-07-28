@@ -3,23 +3,36 @@
 import { useState } from "react";
 
 interface GenerationFormProps {
-  onGenerate: (prompt: string, totalDuration: number, quality: string, aspectRatio: string) => void;
-  isLoading: boolean;
+  onGenerate: (prompt: string, totalDuration: number, quality: string, aspectRatio: string) => Promise<void> | void;
+  isLoading?: boolean;
 }
 
-export default function GenerationForm({ onGenerate, isLoading }: GenerationFormProps) {
+export default function GenerationForm({ onGenerate, isLoading = false }: GenerationFormProps) {
   const [prompt, setPrompt] = useState("");
   const [totalDuration, setTotalDuration] = useState<number>(10);
   const [quality, setQuality] = useState<string>("1080p");
   const [aspectRatio, setAspectRatio] = useState<string>("16:9");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerateClick = () => {
-    if (!prompt.trim()) return;
-    onGenerate(prompt, totalDuration, quality, aspectRatio);
+  const handleGenerateClick = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!prompt.trim() || isGenerating) return;
+
+    setIsGenerating(true);
+    try {
+      await onGenerate(prompt, totalDuration, quality, aspectRatio);
+    } catch (err) {
+      console.error("Video generation error:", err);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
+  const isSubmitDisabled = isGenerating || isLoading || !prompt.trim();
+  const showSpinner = isGenerating || isLoading;
+
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:border-neutral-700">
+    <form onSubmit={handleGenerateClick} className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:border-neutral-700">
       <textarea
         className="w-full bg-neutral-950 border border-neutral-800 rounded-2xl p-5 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-300 text-lg leading-relaxed shadow-inner"
         rows={5}
@@ -104,11 +117,11 @@ export default function GenerationForm({ onGenerate, isLoading }: GenerationForm
 
         <div className="flex items-end h-full">
           <button
-            onClick={handleGenerateClick}
-            disabled={isLoading || !prompt.trim()}
+            type="submit"
+            disabled={isSubmitDisabled}
             className="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-3 text-lg"
           >
-            {isLoading ? (
+            {showSpinner ? (
               <>
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -128,6 +141,6 @@ export default function GenerationForm({ onGenerate, isLoading }: GenerationForm
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
