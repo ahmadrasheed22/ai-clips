@@ -86,7 +86,7 @@ export default function Home() {
             if (data.type === "complete" && data.videoUrl) {
               setFinalVideoUrl(data.videoUrl);
               setProgress(100);
-              setStatusMessage("Masterpiece Complete!");
+              setStatusMessage(data.status || "Masterpiece Complete!");
             }
             if (data.type === "error" || data.error) {
               setError(data.error || "Generation error occurred.");
