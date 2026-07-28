@@ -30,24 +30,24 @@ export function VideoResultPlayer({
   };
 
   return (
-    <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800/80 rounded-3xl p-4 md:p-5 space-y-3 shadow-2xl h-full max-h-full overflow-y-auto custom-scrollbar w-full flex flex-col justify-between">
-      <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 space-y-3 shadow-xl h-full max-h-full overflow-y-auto custom-scrollbar w-full flex flex-col justify-between">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
         <div>
-          <h3 className="text-base font-bold text-neutral-100">{title}</h3>
+          <h3 className="text-base font-bold text-zinc-100">{title}</h3>
           <p className="text-[11px] text-purple-400 font-medium">
             ✨ Product Ad Generation Complete
           </p>
         </div>
         <button
           onClick={onReset}
-          className="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors border border-neutral-700"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 transition-all border border-white/10"
         >
           + Create Another Ad
         </button>
       </div>
 
       {/* Video MP4 Player Container */}
-      <div className="relative w-full max-w-[240px] mx-auto aspect-[9/16] rounded-2xl overflow-hidden border border-neutral-700/80 shadow-2xl bg-black">
+      <div className="relative w-full max-w-[240px] mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-white/20 shadow-2xl bg-black">
         <video
           src={fullVideoUrl}
           controls
@@ -58,10 +58,10 @@ export function VideoResultPlayer({
       </div>
 
       {/* Download and Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row gap-3 pt-1">
         <button
           onClick={handleDownload}
-          className="flex-1 py-3.5 px-5 rounded-xl font-semibold bg-purple-600 hover:bg-purple-500 text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20"
+          className="flex-1 py-3 px-5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(236,72,153,0.5)] active:scale-[0.98] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 cursor-pointer"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -72,20 +72,20 @@ export function VideoResultPlayer({
 
       {/* Script Scene Breakdown Cards if available */}
       {script && script.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-neutral-800">
-          <h4 className="text-sm font-semibold text-neutral-300">
+        <div className="space-y-2.5 pt-3 border-t border-white/10">
+          <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
             🎬 Generated Storyboard Scenes
           </h4>
           <div className="space-y-2">
             {script.map((scene) => (
               <div
                 key={scene.sceneNumber}
-                className="bg-neutral-950/60 border border-neutral-800/80 rounded-xl p-3.5 text-xs text-neutral-300 space-y-1"
+                className="bg-black/20 border border-white/10 rounded-xl p-3 text-xs text-zinc-300 space-y-1"
               >
                 <span className="font-semibold text-purple-400">
                   Scene {scene.sceneNumber}:
                 </span>
-                <p className="text-neutral-300 font-mono text-[11px] leading-relaxed">
+                <p className="text-zinc-300 font-mono text-[11px] leading-relaxed">
                   {scene.prompt}
                 </p>
               </div>
@@ -96,3 +96,4 @@ export function VideoResultPlayer({
     </div>
   );
 }
+

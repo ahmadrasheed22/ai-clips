@@ -36,11 +36,11 @@ export function AdParametersForm({
   onSubmit,
 }: AdParametersFormProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* Step 2: Product Info & Target Platform */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
         <div className="space-y-1">
-          <label className="block text-xs font-semibold text-neutral-200">
+          <label className="block text-xs font-semibold text-zinc-200">
             Product Title / Keyword <span className="text-purple-400">*</span>
           </label>
           <input
@@ -48,28 +48,28 @@ export function AdParametersForm({
             value={productTitle}
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="e.g., Wireless Noise-Canceling Earbuds"
-            className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-xs font-semibold text-neutral-200">
+          <label className="block text-xs font-semibold text-zinc-200">
             Target Ad Platform
           </label>
           <select
             value={targetPlatform}
             onChange={(e) => onPlatformChange(e.target.value)}
-            className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-neutral-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
           >
-            <option value="TikTok / Reels (9:16 Vertical)">TikTok / Reels (9:16 Vertical)</option>
-            <option value="YouTube Shorts (9:16 Vertical)">YouTube Shorts (9:16 Vertical)</option>
-            <option value="Meta Newsfeed (1:1 Square)">Meta Newsfeed (1:1 Square)</option>
+            <option value="TikTok / Reels (9:16 Vertical)" className="bg-zinc-900 text-zinc-100">TikTok / Reels (9:16 Vertical)</option>
+            <option value="YouTube Shorts (9:16 Vertical)" className="bg-zinc-900 text-zinc-100">YouTube Shorts (9:16 Vertical)</option>
+            <option value="Meta Newsfeed (1:1 Square)" className="bg-zinc-900 text-zinc-100">Meta Newsfeed (1:1 Square)</option>
           </select>
         </div>
       </div>
 
       {/* Step 3: Preset Styles */}
-      <div className="space-y-2">
-        <label className="block text-xs font-semibold text-neutral-200">
+      <div className="space-y-1.5">
+        <label className="block text-xs font-semibold text-zinc-200">
           Select Ad Style Template
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -79,19 +79,19 @@ export function AdParametersForm({
               <div
                 key={style.title}
                 onClick={() => onTemplateChange(style.title)}
-                className={`p-2.5 rounded-xl border transition-all cursor-pointer space-y-0.5 ${
+                className={`p-2.5 rounded-xl border transition-all duration-200 cursor-pointer space-y-0.5 hover:-translate-y-1 hover:border-purple-500/50 ${
                   isSelected
-                    ? "bg-purple-950/40 border-purple-500 text-purple-200 shadow-md shadow-purple-500/10"
-                    : "bg-neutral-950/40 border-neutral-800 hover:border-purple-500/40 text-neutral-400"
+                    ? "bg-purple-500/10 border-purple-500 text-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+                    : "bg-black/20 border-white/10 text-zinc-400"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <p className={`text-xs font-semibold ${isSelected ? "text-purple-300" : "text-neutral-200"}`}>
+                  <p className={`text-xs font-semibold ${isSelected ? "text-purple-300" : "text-zinc-200"}`}>
                     {style.title}
                   </p>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />}
                 </div>
-                <p className="text-[10px] text-neutral-400 leading-snug">{style.desc}</p>
+                <p className="text-[10px] text-zinc-400 leading-snug">{style.desc}</p>
               </div>
             );
           })}
@@ -99,12 +99,12 @@ export function AdParametersForm({
       </div>
 
       {/* Step 4: Ad Creative Prompt / Scene Details */}
-      <div className="space-y-2">
-        <label className="block text-xs font-semibold text-neutral-200">
-          Ad Creative Details & Scene Description <span className="text-[11px] text-neutral-400 font-normal">(Optional)</span>
+      <div className="space-y-1.5">
+        <label className="block text-xs font-semibold text-zinc-200">
+          Ad Creative Details & Scene Description <span className="text-[10px] text-zinc-400 font-normal">(Optional)</span>
         </label>
         <textarea
-          className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-300 text-xs leading-relaxed shadow-inner"
+          className="w-full bg-black/20 border border-white/10 rounded-lg p-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 resize-none transition-all duration-200 text-xs leading-relaxed"
           rows={2}
           placeholder="Describe the setting, model, action, or visual mood..."
           value={customPrompt}
@@ -117,10 +117,10 @@ export function AdParametersForm({
         type="button"
         onClick={onSubmit}
         disabled={!canSubmit || isSubmitting}
-        className={`w-full py-3 rounded-xl font-semibold text-xs md:text-sm text-center transition-all duration-300 flex items-center justify-center gap-2 ${
+        className={`w-full py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm text-center transition-all duration-200 flex items-center justify-center gap-2 ${
           canSubmit && !isSubmitting
-            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-600/25 cursor-pointer"
-            : "bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-60"
+            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(236,72,153,0.5)] active:scale-[0.98] text-white shadow-lg shadow-purple-600/25 cursor-pointer"
+            : "bg-white/5 border border-white/10 text-zinc-500 cursor-not-allowed opacity-50 shadow-none"
         }`}
       >
         {isSubmitting ? (
@@ -143,3 +143,4 @@ export function AdParametersForm({
     </div>
   );
 }
+
