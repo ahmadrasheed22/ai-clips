@@ -45,8 +45,8 @@ export function ImageDropzone({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="block text-xs font-semibold text-neutral-200">
+    <div className="space-y-1.5">
+      <label className="block text-xs font-semibold text-zinc-200">
         1. Upload Product Photo
       </label>
       <input
@@ -62,15 +62,15 @@ export function ImageDropzone({
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`border-2 border-dashed rounded-2xl p-3 md:p-4 min-h-[160px] text-center transition-all bg-neutral-950/40 flex flex-col items-center justify-center gap-2 group cursor-pointer relative overflow-hidden ${
+        className={`border border-dashed rounded-xl p-3 min-h-[135px] text-center transition-all bg-black/20 flex flex-col items-center justify-center gap-1.5 group cursor-pointer relative overflow-hidden ${
           isDragOver
-            ? "border-purple-500 bg-purple-950/20"
-            : "border-neutral-700/70 hover:border-purple-500/50"
+            ? "border-purple-500 bg-purple-500/10 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+            : "border-white/20 hover:border-purple-500/50 hover:bg-white/[0.07]"
         }`}
       >
         {productImagePreview ? (
-          <div className="flex flex-col items-center gap-2">
-            <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-purple-500/50 shadow-lg">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-purple-500/50 shadow-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={productImagePreview}
@@ -79,7 +79,7 @@ export function ImageDropzone({
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-purple-300 font-medium truncate max-w-[180px]">
+              <span className="text-[11px] text-purple-300 font-medium truncate max-w-[170px]">
                 {imageName}
               </span>
               <button
@@ -89,7 +89,7 @@ export function ImageDropzone({
                   onClearImage();
                   if (fileInputRef.current) fileInputRef.current.value = "";
                 }}
-                className="text-[11px] text-red-400 hover:text-red-300 underline bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40"
+                className="text-[10px] text-red-400 hover:text-red-300 underline bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40"
               >
                 Remove
               </button>
@@ -97,8 +97,8 @@ export function ImageDropzone({
           </div>
         ) : (
           <>
-            <div className="w-10 h-10 rounded-xl bg-purple-950/50 border border-purple-800/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -108,11 +108,11 @@ export function ImageDropzone({
               </svg>
             </div>
             <div>
-              <p className="text-xs font-medium text-neutral-300">
+              <p className="text-xs font-medium text-zinc-300">
                 Drag & drop product photo, or{" "}
-                <span className="text-purple-400 underline">browse</span>
+                <span className="text-purple-400 underline font-semibold">browse</span>
               </p>
-              <p className="text-[11px] text-neutral-500 mt-0.5">PNG, JPG, or WEBP up to 10MB</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">PNG, JPG, or WEBP up to 10MB</p>
             </div>
           </>
         )}
@@ -120,3 +120,4 @@ export function ImageDropzone({
     </div>
   );
 }
+
