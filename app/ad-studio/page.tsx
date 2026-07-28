@@ -1,72 +1,83 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { ImageDropzone } from "./components/ImageDropzone";
+import { AdParametersForm } from "./components/AdParametersForm";
+import { VideoResultPlayer } from "./components/VideoResultPlayer";
+import { generateProductAd, AdScriptScene } from "@/lib/api/ad-generator.api";
 
 export default function ProductAdStudioPage() {
-  // State Management
-  const [productImage, setProductImage] = useState<string | null>(null);
+  // Master State Management
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [productImagePreview, setProductImagePreview] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string | null>(null);
   const [productTitle, setProductTitle] = useState("");
   const [targetPlatform, setTargetPlatform] = useState("TikTok / Reels (9:16 Vertical)");
   const [selectedTemplate, setSelectedTemplate] = useState("Viral Hook UGC");
   const [customPrompt, setCustomPrompt] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedPayload, setSubmittedPayload] = useState<any>(null);
+  const [resultVideoUrl, setResultVideoUrl] = useState<string | null>(null);
+  const [generatedScript, setGeneratedScript] = useState<AdScriptScene[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // File Upload Handler
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageName(file.name);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProductImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  // File Handlers
+  const handleImageSelect = (file: File) => {
+    setImageFile(file);
+    setImageName(file.name);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setProductImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleClearImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setProductImage(null);
+  const handleClearImage = () => {
+    setImageFile(null);
+    setProductImagePreview(null);
     setImageName(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   };
 
-  // Active Button Logic: Enabled if an image is uploaded OR a title/prompt is entered
-  const canSubmit = !!(productImage || productTitle.trim() || customPrompt.trim());
+  // Submit button active state logic: image OR title OR custom prompt entered
+  const canSubmit = !!(imageFile || productTitle.trim() || customPrompt.trim());
 
-  const handleSubmitAd = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit || isSubmitting) return;
 
-    const payload = {
-      productImageName: imageName,
-      productTitle: productTitle.trim(),
-      targetPlatform,
-      selectedTemplate,
-      customPrompt: customPrompt.trim(),
-    };
-
-    console.log("Submitting Product Ad Payload:", payload);
     setIsSubmitting(true);
-    setSubmittedPayload(payload);
+    setErrorMessage(null);
 
-    setTimeout(() => {
+    try {
+      const response = await generateProductAd({
+        imageFile,
+        title: productTitle.trim() || "Featured Product",
+        platform: targetPlatform,
+        template: selectedTemplate,
+        customPrompt,
+        aspectRatio: targetPlatform.includes("1:1") ? "1:1" : "9:16",
+        duration: 15,
+      });
+
+      if (response.success && response.videoUrl) {
+        setResultVideoUrl(response.videoUrl);
+        if (response.script) setGeneratedScript(response.script);
+      } else {
+        throw new Error("Invalid response format received from ad generator backend.");
+      }
+    } catch (err: any) {
+      console.error("Failed to generate ad:", err);
+      setErrorMessage(err.message || "Failed to generate video ad. Please check backend connection.");
+    } finally {
       setIsSubmitting(false);
-    }, 2500);
+    }
   };
 
-  const templates = [
-    { title: "Viral Hook UGC", desc: "Fast-paced dynamic cuts with energetic voiceover" },
-    { title: "Sleek Cinematic", desc: "Studio lighting, 360 rotation & luxury aesthetics" },
-    { title: "Problem-Solution", desc: "Direct response ad structure focused on conversion" },
-  ];
+  const handleReset = () => {
+    setResultVideoUrl(null);
+    setGeneratedScript([]);
+    setErrorMessage(null);
+  };
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100 p-6 md:p-8 flex flex-col items-center font-sans relative overflow-hidden">
@@ -75,7 +86,7 @@ export default function ProductAdStudioPage() {
       <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-pink-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-4xl w-full space-y-8 relative z-10">
-        {/* Navigation Bar */}
+        {/* Navigation Header Bar */}
         <div className="flex items-center justify-between border-b border-neutral-800/80 pb-4 pt-2">
           <Link
             href="/"
@@ -92,7 +103,7 @@ export default function ProductAdStudioPage() {
           </span>
         </div>
 
-        {/* Hero Section */}
+        {/* Hero Section Header */}
         <header className="text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-purple-300 text-xs font-medium">
             ✨ E-Commerce Video Studio
@@ -105,197 +116,56 @@ export default function ProductAdStudioPage() {
           </p>
         </header>
 
-        {/* Interactive Shell / Form UI */}
-        <form onSubmit={handleSubmitAd} className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800/80 rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl">
-          {/* Step 1: Upload Dropzone */}
-          <div className="space-y-3">
-            <label className="block text-sm font-semibold text-neutral-200">
-              1. Upload Product Photo
-            </label>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              id="product-image-upload"
-            />
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-neutral-700/70 hover:border-purple-500/50 rounded-2xl p-6 md:p-8 text-center transition-all bg-neutral-950/40 flex flex-col items-center justify-center gap-3 group cursor-pointer relative overflow-hidden"
+        {/* Display Error Message Toast if any */}
+        {errorMessage && (
+          <div className="bg-red-950/40 border border-red-800/60 rounded-2xl p-4 text-xs flex items-center justify-between text-red-300">
+            <span>⚠️ {errorMessage}</span>
+            <button
+              onClick={() => setErrorMessage(null)}
+              className="text-red-400 hover:text-red-200 underline font-semibold ml-4"
             >
-              {productImage ? (
-                <div className="flex flex-col items-center gap-3">
-                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-purple-500/50 shadow-lg">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={productImage} alt="Product preview" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-purple-300 font-medium">{imageName}</span>
-                    <button
-                      type="button"
-                      onClick={handleClearImage}
-                      className="text-xs text-red-400 hover:text-red-300 underline bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="w-14 h-14 rounded-2xl bg-purple-950/50 border border-purple-800/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-neutral-300">
-                      Drag and drop product image here, or <span className="text-purple-400 underline">browse</span>
-                    </p>
-                    <p className="text-xs text-neutral-500 mt-1">PNG, JPG, or WEBP up to 10MB</p>
-                  </div>
-                </>
-              )}
-            </div>
+              Dismiss
+            </button>
           </div>
+        )}
 
-          {/* Step 2: Product Info & Target Platform */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-neutral-200">
-                Product Title / Keyword
-              </label>
-              <input
-                type="text"
-                value={productTitle}
-                onChange={(e) => setProductTitle(e.target.value)}
-                placeholder="e.g., Wireless Noise-Canceling Earbuds"
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-neutral-200">
-                Target Ad Platform
-              </label>
-              <select
-                value={targetPlatform}
-                onChange={(e) => setTargetPlatform(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-neutral-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              >
-                <option value="TikTok / Reels (9:16 Vertical)">TikTok / Reels (9:16 Vertical)</option>
-                <option value="YouTube Shorts (9:16 Vertical)">YouTube Shorts (9:16 Vertical)</option>
-                <option value="Meta Newsfeed (1:1 Square)">Meta Newsfeed (1:1 Square)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Step 3: Preset Styles */}
-          <div className="space-y-3">
-            <label className="block text-sm font-semibold text-neutral-200">
-              Select Ad Style Template
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {templates.map((style) => {
-                const isSelected = selectedTemplate === style.title;
-                return (
-                  <div
-                    key={style.title}
-                    onClick={() => setSelectedTemplate(style.title)}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer space-y-1 ${
-                      isSelected
-                        ? "bg-purple-950/40 border-purple-500 text-purple-200 shadow-md shadow-purple-500/10"
-                        : "bg-neutral-950/40 border-neutral-800 hover:border-purple-500/40 text-neutral-400"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className={`text-sm font-semibold ${isSelected ? "text-purple-300" : "text-neutral-200"}`}>
-                        {style.title}
-                      </p>
-                      {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-purple-400" />
-                      )}
-                    </div>
-                    <p className="text-xs text-neutral-400">{style.desc}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Step 4: Ad Creative Prompt / Scene Details Textarea */}
-          <div className="space-y-3">
-            <label className="block text-sm font-semibold text-neutral-200">
-              Ad Creative Details & Scene Description <span className="text-xs text-neutral-400 font-normal">(Optional)</span>
-            </label>
-            <textarea
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-2xl p-5 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-300 text-sm md:text-base leading-relaxed shadow-inner"
-              rows={4}
-              placeholder="Describe the setting, model, action, or visual mood... (e.g., A sleek gym commercial with a fit model raising her wrist to tap the smartwatch during a workout)."
-              value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
-            />
-          </div>
-
-          {/* Under Construction Notice Banner */}
-          <div className="bg-purple-950/30 border border-purple-800/40 rounded-2xl p-5 flex items-start gap-4">
-            <div className="p-2 bg-purple-900/40 rounded-xl text-purple-400 shrink-0 mt-0.5">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-sm font-semibold text-purple-200">
-                Product Ad Engine Ready for Input
-              </h4>
-              <p className="text-xs text-neutral-300 leading-relaxed">
-                Enter your product details and creative prompt above to preview the submission payload. Once backend integration completes, this form will trigger our full multi-scene product video ad generator!
-              </p>
-            </div>
-          </div>
-
-          {/* Submission Feedback Toast / Box */}
-          {submittedPayload && (
-            <div className="bg-emerald-950/40 border border-emerald-800/50 rounded-2xl p-4 text-xs space-y-2">
-              <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Product Ad Payload Captured!
-              </div>
-              <pre className="text-neutral-300 bg-neutral-950/60 p-3 rounded-lg overflow-x-auto text-[11px] font-mono border border-neutral-800">
-                {JSON.stringify(submittedPayload, null, 2)}
-              </pre>
-            </div>
-          )}
-
-          {/* Action Button: Disabled when no input/image present, Active when canSubmit is true */}
-          <button
-            type="submit"
-            disabled={!canSubmit || isSubmitting}
-            className={`w-full py-4 rounded-2xl font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 ${
-              canSubmit
-                ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-600/25 cursor-pointer"
-                : "bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-60"
-            }`}
+        {/* Conditional Render: Result Video Player OR Product Ad Form */}
+        {resultVideoUrl ? (
+          <VideoResultPlayer
+            videoUrl={resultVideoUrl}
+            title={productTitle || "Product Video Ad"}
+            script={generatedScript}
+            onReset={handleReset}
+          />
+        ) : (
+          <form
+            onSubmit={handleFormSubmit}
+            className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800/80 rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl"
           >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Processing Product Ad Request...</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span>Create Product Ad</span>
-              </>
-            )}
-          </button>
-        </form>
+            {/* Step 1: File Dropzone Component */}
+            <ImageDropzone
+              productImagePreview={productImagePreview}
+              imageName={imageName}
+              onImageSelect={handleImageSelect}
+              onClearImage={handleClearImage}
+            />
+
+            {/* Steps 2-4: Ad Parameters Form Component */}
+            <AdParametersForm
+              productTitle={productTitle}
+              targetPlatform={targetPlatform}
+              selectedTemplate={selectedTemplate}
+              customPrompt={customPrompt}
+              isSubmitting={isSubmitting}
+              canSubmit={canSubmit}
+              onTitleChange={setProductTitle}
+              onPlatformChange={setTargetPlatform}
+              onTemplateChange={setSelectedTemplate}
+              onPromptChange={setCustomPrompt}
+              onSubmit={handleFormSubmit}
+            />
+          </form>
+        )}
       </div>
     </main>
   );
