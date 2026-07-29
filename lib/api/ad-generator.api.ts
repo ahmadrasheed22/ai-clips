@@ -1,5 +1,7 @@
 export interface GenerateAdParams {
+  imageFiles?: File[];
   imageFile?: File | null;
+  imageUrls?: string[];
   title: string;
   platform?: string;
   template?: string;
@@ -31,8 +33,16 @@ export async function generateProductAd(
 ): Promise<GenerateAdResponse> {
   const formData = new FormData();
 
-  if (params.imageFile) {
-    formData.append('file', params.imageFile);
+  if (params.imageFiles && params.imageFiles.length > 0) {
+    params.imageFiles.forEach((file) => {
+      formData.append('files', file);
+    });
+  } else if (params.imageFile) {
+    formData.append('files', params.imageFile);
+  }
+
+  if (params.imageUrls && params.imageUrls.length > 0) {
+    formData.append('imageUrls', JSON.stringify(params.imageUrls));
   }
 
   formData.append('title', params.title.trim());

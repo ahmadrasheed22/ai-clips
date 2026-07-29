@@ -9,10 +9,10 @@ import { GenerationProgressStepper } from "./components/GenerationProgressSteppe
 import { generateProductAd, AdScriptScene } from "@/lib/api/ad-generator.api";
 
 export default function ProductAdStudioPage() {
-  // Master State Management
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [productImagePreview, setProductImagePreview] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string | null>(null);
+  // Master State Management (Multi-Image Array)
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imageNames, setImageNames] = useState<string[]>([]);
   const [productTitle, setProductTitle] = useState("");
   const [targetPlatform, setTargetPlatform] = useState("TikTok / Reels (9:16 Vertical)");
   const [selectedTemplate, setSelectedTemplate] = useState("Viral Hook UGC");
@@ -28,25 +28,40 @@ export default function ProductAdStudioPage() {
   const [generatedScript, setGeneratedScript] = useState<AdScriptScene[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // File Handlers
-  const handleImageSelect = (file: File) => {
-    setImageFile(file);
-    setImageName(file.name);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setProductImagePreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  // Multi-File Handlers
+  const handleImagesSelect = (newFiles: File[]) => {
+    const updatedFiles = [...imageFiles, ...newFiles].slice(0, 9);
+    setImageFiles(updatedFiles);
+    setImageNames(updatedFiles.map((f) => f.name));
+
+    const previewPromises = newFiles.map(
+      (file) =>
+        new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        })
+    );
+
+    Promise.all(previewPromises).then((newPreviews) => {
+      setImagePreviews((prev) => [...prev, ...newPreviews].slice(0, 9));
+    });
   };
 
-  const handleClearImage = () => {
-    setImageFile(null);
-    setProductImagePreview(null);
-    setImageName(null);
+  const handleRemoveImage = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+    setImageNames((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Submit button active state logic: image OR title OR custom prompt entered
-  const canSubmit = !!(imageFile || productTitle.trim() || customPrompt.trim());
+  const handleClearAllImages = () => {
+    setImageFiles([]);
+    setImagePreviews([]);
+    setImageNames([]);
+  };
+
+  // Submit button active state logic: images OR title OR custom prompt entered
+  const canSubmit = !!(imageFiles.length > 0 || productTitle.trim() || customPrompt.trim());
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,13 +69,13 @@ export default function ProductAdStudioPage() {
 
     setIsSubmitting(true);
     setCurrentStep(1);
-    setCurrentStepLabel("🔍 Analyzing product details with Vision AI...");
+    setCurrentStepLabel("🔍 Analyzing multi-angle product details with Vision AI...");
     setErrorMessage(null);
 
     try {
       const response = await generateProductAd(
         {
-          imageFile,
+          imageFiles,
           title: productTitle.trim() || "Featured Product",
           platform: targetPlatform,
           template: selectedTemplate,
@@ -128,7 +143,7 @@ export default function ProductAdStudioPage() {
             Product Ad Generator
           </h1>
           <p className="text-zinc-400 text-xs md:text-sm max-w-3xl">
-            Transform still product photos into high-converting video ads for TikTok, Instagram Reels, and Meta Ads.
+            Transform multi-angle product photos into high-converting video ads for TikTok, Instagram Reels, and Meta Ads.
           </p>
         </header>
 
@@ -164,10 +179,11 @@ export default function ProductAdStudioPage() {
 
               {/* Step 1: File Dropzone Component */}
               <ImageDropzone
-                productImagePreview={productImagePreview}
-                imageName={imageName}
-                onImageSelect={handleImageSelect}
-                onClearImage={handleClearImage}
+                imagePreviews={imagePreviews}
+                imageNames={imageNames}
+                onImagesSelect={handleImagesSelect}
+                onRemoveImage={handleRemoveImage}
+                onClearAll={handleClearAllImages}
               />
 
               {/* Steps 2-4: Ad Parameters Form Component */}
