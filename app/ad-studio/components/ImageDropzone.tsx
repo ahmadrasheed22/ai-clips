@@ -3,34 +3,44 @@
 import React, { useRef, useState } from "react";
 
 interface ImageDropzoneProps {
-  productImagePreview: string | null;
-  imageName: string | null;
-  onImageSelect: (file: File) => void;
-  onClearImage: () => void;
+  imagePreviews: string[];
+  imageNames: string[];
+  onImagesSelect: (files: File[]) => void;
+  onRemoveImage: (index: number) => void;
+  onClearAll: () => void;
 }
 
 export function ImageDropzone({
-  productImagePreview,
-  imageName,
-  onImageSelect,
-  onClearImage,
+  imagePreviews,
+  imageNames,
+  onImagesSelect,
+  onRemoveImage,
+  onClearAll,
 }: ImageDropzoneProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
+  const processFiles = (files: FileList | File[]) => {
+    const validImages = Array.from(files).filter((file) =>
+      file.type.startsWith("image/")
+    );
+    if (validImages.length > 0) {
+      onImagesSelect(validImages);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onImageSelect(file);
+    if (e.target.files) {
+      processFiles(e.target.files);
+      e.target.value = "";
     }
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      onImageSelect(file);
+    if (e.dataTransfer.files) {
+      processFiles(e.dataTransfer.files);
     }
   };
 
@@ -44,59 +54,110 @@ export function ImageDropzone({
     setIsDragOver(false);
   };
 
+  const hasImages = imagePreviews.length > 0;
+
   return (
-    <div className="space-y-1.5">
-      <label className="block text-xs font-semibold text-zinc-200">
-        1. Upload Product Photo
-      </label>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-semibold text-zinc-200">
+          1. Upload Product Photos (Multi-Angle)
+        </label>
+        {hasImages && (
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20 font-medium">
+              📷 {imagePreviews.length} {imagePreviews.length === 1 ? "Angle" : "Angles"}
+            </span>
+            <button
+              type="button"
+              onClick={onClearAll}
+              className="text-[10px] text-red-400 hover:text-red-300 underline font-medium"
+            >
+              Clear All
+            </button>
+          </div>
+        )}
+      </div>
+
       <input
         type="file"
         ref={fileInputRef}
         accept="image/*"
+        multiple
         onChange={handleFileChange}
         className="hidden"
         id="product-image-upload"
       />
+
       <div
-        onClick={() => fileInputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`border border-dashed rounded-xl p-3 min-h-[135px] text-center transition-all bg-black/20 flex flex-col items-center justify-center gap-1.5 group cursor-pointer relative overflow-hidden ${
+        className={`border border-dashed rounded-xl p-3 min-h-[135px] text-center transition-all bg-black/20 flex flex-col items-center justify-center gap-2 relative overflow-hidden ${
           isDragOver
             ? "border-purple-500 bg-purple-500/10 shadow-[0_0_15px_rgba(168,85,247,0.3)]"
             : "border-white/20 hover:border-purple-500/50 hover:bg-white/[0.07]"
         }`}
       >
-        {productImagePreview ? (
-          <div className="flex flex-col items-center gap-1.5">
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-purple-500/50 shadow-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={productImagePreview}
-                alt="Product preview"
-                className="w-full h-full object-cover"
-              />
+        {hasImages ? (
+          <div className="w-full space-y-2.5">
+            {/* Grid of Thumbnails */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+              {imagePreviews.map((preview, index) => (
+                <div
+                  key={index}
+                  className="relative group rounded-lg overflow-hidden border border-purple-500/40 shadow-md aspect-square bg-zinc-900"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={preview}
+                    alt={`Product angle ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveImage(index);
+                      }}
+                      className="bg-red-600/90 hover:bg-red-600 text-white rounded-full p-1 shadow-lg text-[10px] font-bold"
+                      title="Remove image"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <span className="absolute bottom-1 left-1 bg-black/70 backdrop-blur-xs text-[9px] text-purple-200 px-1 py-0.2 rounded font-mono truncate max-w-[90%]">
+                    {imageNames[index] || `Angle ${index + 1}`}
+                  </span>
+                </div>
+              ))}
+
+              {/* Add More Button inside grid */}
+              {imagePreviews.length < 9 && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex flex-col items-center justify-center gap-1 border border-dashed border-purple-500/40 hover:border-purple-400 rounded-lg aspect-square bg-purple-500/5 hover:bg-purple-500/10 text-purple-400 transition-all cursor-pointer"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[10px] font-medium">Add Angle</span>
+                </button>
+              )}
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-purple-300 font-medium truncate max-w-[170px]">
-                {imageName}
-              </span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClearImage();
-                  if (fileInputRef.current) fileInputRef.current.value = "";
-                }}
-                className="text-[10px] text-red-400 hover:text-red-300 underline bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40"
-              >
-                Remove
-              </button>
-            </div>
+
+            <p className="text-[10px] text-zinc-400">
+              Drag & drop more product photos or click above to add reference angles (up to 9).
+            </p>
           </div>
         ) : (
-          <>
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="flex flex-col items-center justify-center gap-1.5 cursor-pointer w-full h-full py-2"
+          >
             <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -109,15 +170,18 @@ export function ImageDropzone({
             </div>
             <div>
               <p className="text-xs font-medium text-zinc-300">
-                Drag & drop product photo, or{" "}
+                Drag & drop product photos (front, back, details), or{" "}
                 <span className="text-purple-400 underline font-semibold">browse</span>
               </p>
-              <p className="text-[10px] text-zinc-400 mt-0.5">PNG, JPG, or WEBP up to 10MB</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">
+                Upload up to 9 product reference angles (PNG, JPG, WEBP)
+              </p>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 }
+
 
