@@ -30,8 +30,8 @@ export function VideoResultPlayer({
   };
 
   return (
-    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 space-y-3 shadow-xl h-full max-h-full overflow-y-auto custom-scrollbar w-full flex flex-col justify-between">
-      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 space-y-4 shadow-xl h-full max-h-full overflow-y-auto custom-scrollbar w-full flex flex-col items-center">
+      <div className="w-full flex items-center justify-between border-b border-white/10 pb-2.5 shrink-0">
         <div>
           <h3 className="text-base font-bold text-zinc-100">{title}</h3>
           <p className="text-[11px] text-purple-400 font-medium">
@@ -40,28 +40,29 @@ export function VideoResultPlayer({
         </div>
         <button
           onClick={onReset}
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 transition-all border border-white/10"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 transition-all border border-white/10 cursor-pointer"
         >
           + Create Another Ad
         </button>
       </div>
 
-      {/* Video MP4 Player Container */}
-      <div className="relative w-full max-w-[240px] mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-white/20 shadow-2xl bg-black">
+      {/* Video MP4 Player Container (Restrained height so it fits cleanly on laptop screens at 100% zoom) */}
+      <div className="relative h-[340px] md:h-[380px] max-h-[45vh] aspect-[9/16] mx-auto rounded-xl overflow-hidden border border-white/20 shadow-2xl bg-black shrink-0">
         <video
           src={fullVideoUrl}
           controls
           autoPlay
           loop
+          playsInline
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* Download and Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-1">
+      <div className="w-full shrink-0 pt-1">
         <button
           onClick={handleDownload}
-          className="flex-1 py-3 px-5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(236,72,153,0.5)] active:scale-[0.98] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 cursor-pointer"
+          className="w-full py-3 px-5 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(236,72,153,0.5)] active:scale-[0.99] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 cursor-pointer text-sm"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -72,7 +73,7 @@ export function VideoResultPlayer({
 
       {/* Script Scene Breakdown Cards if available */}
       {script && script.length > 0 && (
-        <div className="space-y-2.5 pt-3 border-t border-white/10">
+        <div className="w-full space-y-2.5 pt-3 border-t border-white/10 shrink-0">
           <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
             🎬 Generated Storyboard Scenes
           </h4>

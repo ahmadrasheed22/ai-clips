@@ -235,19 +235,19 @@ function AdPreviewPlaceholder() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full max-w-lg pt-1">
         <div className="bg-black/20 border border-white/10 rounded-xl p-3 text-center space-y-0.5">
-          <span className="text-base">📜</span>
-          <p className="text-xs font-semibold text-zinc-200">3-Scene Script</p>
-          <p className="text-[10px] text-zinc-400">Automated hook & call to action</p>
+          <span className="text-base">📱</span>
+          <p className="text-xs font-semibold text-zinc-200">Multi-Platform</p>
+          <p className="text-[10px] text-zinc-400">Native TikTok & Reels (9:16)</p>
         </div>
         <div className="bg-black/20 border border-white/10 rounded-xl p-3 text-center space-y-0.5">
-          <span className="text-base">🪄</span>
-          <p className="text-xs font-semibold text-zinc-200">Vision Consistency</p>
-          <p className="text-[10px] text-zinc-400">Preserves product subject details</p>
+          <span className="text-base">🎯</span>
+          <p className="text-xs font-semibold text-zinc-200">Product Locking</p>
+          <p className="text-[10px] text-zinc-400">Preserves original product photo</p>
         </div>
         <div className="bg-black/20 border border-white/10 rounded-xl p-3 text-center space-y-0.5">
           <span className="text-base">⚡</span>
-          <p className="text-xs font-semibold text-zinc-200">1080p HD MP4</p>
-          <p className="text-[10px] text-zinc-400">High bitrate FFmpeg stitch</p>
+          <p className="text-xs font-semibold text-zinc-200">1080p HD Export</p>
+          <p className="text-[10px] text-zinc-400">High bitrate FFmpeg render</p>
         </div>
       </div>
     </div>
