@@ -12,7 +12,11 @@ export interface GenerateAdParams {
 
 export interface AdScriptScene {
   sceneNumber: number;
-  prompt: string;
+  keyframePrompt: string;
+  motionPrompt: string;
+  narrationText: string;
+  prompt?: string;
+  negativePrompt?: string;
 }
 
 export interface GenerateAdResponse {
