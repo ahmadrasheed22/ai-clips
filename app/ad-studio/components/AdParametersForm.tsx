@@ -36,62 +36,62 @@ export function AdParametersForm({
   onSubmit,
 }: AdParametersFormProps) {
   return (
-    <div className="space-y-3.5">
+    <div className="space-y-4">
       {/* Step 2: Product Info & Target Platform */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-        <div className="space-y-1">
-          <label className="block text-xs font-semibold text-zinc-200">
-            Product Title / Keyword <span className="text-purple-400">*</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+            Product Title / Keyword <span className="text-orange-600">*</span>
           </label>
           <input
             type="text"
             value={productTitle}
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="e.g., Wireless Noise-Canceling Earbuds"
-            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+            className="w-full glass-input rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all font-medium"
           />
         </div>
-        <div className="space-y-1">
-          <label className="block text-xs font-semibold text-zinc-200">
+        <div className="space-y-1.5">
+          <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
             Target Ad Platform
           </label>
           <select
             value={targetPlatform}
             onChange={(e) => onPlatformChange(e.target.value)}
-            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+            className="w-full glass-input rounded-xl px-3.5 py-2 text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all font-medium"
           >
-            <option value="TikTok / Reels (9:16 Vertical)" className="bg-zinc-900 text-zinc-100">TikTok / Reels (9:16 Vertical)</option>
-            <option value="YouTube Shorts (9:16 Vertical)" className="bg-zinc-900 text-zinc-100">YouTube Shorts (9:16 Vertical)</option>
-            <option value="Meta Newsfeed (1:1 Square)" className="bg-zinc-900 text-zinc-100">Meta Newsfeed (1:1 Square)</option>
+            <option value="TikTok / Reels (9:16 Vertical)" className="bg-stone-900 text-stone-100">TikTok / Reels (9:16 Vertical)</option>
+            <option value="YouTube Shorts (9:16 Vertical)" className="bg-stone-900 text-stone-100">YouTube Shorts (9:16 Vertical)</option>
+            <option value="Meta Newsfeed (1:1 Square)" className="bg-stone-900 text-stone-100">Meta Newsfeed (1:1 Square)</option>
           </select>
         </div>
       </div>
 
       {/* Step 3: Preset Styles */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-200">
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
           Select Ad Style Template
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           {templates.map((style) => {
             const isSelected = selectedTemplate === style.title;
             return (
               <div
                 key={style.title}
                 onClick={() => onTemplateChange(style.title)}
-                className={`p-2.5 rounded-xl border transition-all duration-200 cursor-pointer space-y-0.5 hover:-translate-y-1 hover:border-purple-500/50 ${
+                className={`p-3 rounded-xl border transition-all duration-300 cursor-pointer space-y-1 hover:scale-[1.02] ${
                   isSelected
-                    ? "bg-purple-500/10 border-purple-500 text-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.4)]"
-                    : "bg-black/20 border-white/10 text-zinc-400"
+                    ? "bg-stone-900 text-amber-200 border-white/30 shadow-md"
+                    : "bg-white/40 border-white/60 text-stone-800 hover:bg-white/60"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <p className={`text-xs font-semibold ${isSelected ? "text-purple-300" : "text-zinc-200"}`}>
+                  <p className={`text-xs font-extrabold ${isSelected ? "text-amber-200" : "text-stone-900"}`}>
                     {style.title}
                   </p>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />}
+                  {isSelected && <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />}
                 </div>
-                <p className="text-[10px] text-zinc-400 leading-snug">{style.desc}</p>
+                <p className={`text-[10px] leading-snug font-medium ${isSelected ? "text-amber-100/80" : "text-stone-700"}`}>{style.desc}</p>
               </div>
             );
           })}
@@ -100,12 +100,12 @@ export function AdParametersForm({
 
       {/* Step 4: Ad Creative Prompt / Scene Details */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-zinc-200">
-          Ad Creative Details & Scene Description <span className="text-[10px] text-zinc-400 font-normal">(Optional)</span>
+        <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+          Ad Creative Details & Scene Description <span className="text-[10px] text-stone-600 font-normal lowercase">(optional)</span>
         </label>
         <textarea
-          className="w-full bg-black/20 border border-white/10 rounded-lg p-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 resize-none transition-all duration-200 text-xs leading-relaxed"
-          rows={2}
+          className="w-full glass-input rounded-xl p-3 text-stone-900 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-orange-600 resize-none transition-all duration-300 text-xs leading-relaxed font-medium"
+          rows={2.5}
           placeholder="Describe the setting, model, action, or visual mood..."
           value={customPrompt}
           onChange={(e) => onPromptChange(e.target.value)}
@@ -117,10 +117,10 @@ export function AdParametersForm({
         type="button"
         onClick={onSubmit}
         disabled={!canSubmit || isSubmitting}
-        className={`w-full py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm text-center transition-all duration-200 flex items-center justify-center gap-2 ${
+        className={`w-full py-3.5 rounded-xl font-bold text-xs md:text-sm text-center transition-all duration-300 flex items-center justify-center gap-2.5 ${
           canSubmit && !isSubmitting
-            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(236,72,153,0.5)] active:scale-[0.98] text-white shadow-lg shadow-purple-600/25 cursor-pointer"
-            : "bg-white/5 border border-white/10 text-zinc-500 cursor-not-allowed opacity-50 shadow-none"
+            ? "bg-gradient-to-r from-orange-600 via-amber-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 hover:scale-[1.02] hover:shadow-[0_12px_25px_rgba(234,88,12,0.35)] active:scale-[0.98] text-white shadow-xl cursor-pointer"
+            : "bg-white/40 border border-white/60 text-stone-500 cursor-not-allowed opacity-50 shadow-none"
         }`}
       >
         {isSubmitting ? (
@@ -143,4 +143,3 @@ export function AdParametersForm({
     </div>
   );
 }
-

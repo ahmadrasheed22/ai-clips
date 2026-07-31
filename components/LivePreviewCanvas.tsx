@@ -31,9 +31,9 @@ export default function LivePreviewCanvas({
       <div
         className={`w-full ${
           isPortrait ? "max-w-sm aspect-[9/16]" : "max-w-3xl aspect-video"
-        } relative rounded-3xl overflow-hidden border border-neutral-800/80 bg-neutral-950/90 shadow-[0_0_50px_rgba(147,51,234,0.15)] flex flex-col justify-between p-6 transition-all duration-500 group`}
+        } relative rounded-3xl overflow-hidden border border-white/70 glass-card shadow-[0_25px_60px_rgba(31,10,4,0.2)] flex flex-col justify-between p-6 transition-all duration-500 group`}
       >
-        {/* Background Layer: First Frame Video Preview or Shimmering Skeleton */}
+        {/* Background Layer: First Frame Video Preview or Shimmering Sunset Skeleton */}
         {fullPreviewUrl ? (
           <div className="absolute inset-0 z-0">
             <video
@@ -42,32 +42,32 @@ export default function LivePreviewCanvas({
               loop
               muted
               playsInline
-              className="w-full h-full object-cover opacity-60 transition-opacity duration-1000 scale-[1.02] filter blur-[0.5px]"
+              className="w-full h-full object-cover opacity-75 transition-opacity duration-1000 scale-[1.02] filter blur-[0.5px]"
             />
-            {/* Dark glass tint overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-neutral-950/60" />
+            {/* Dark warm glass tint overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-stone-950/60" />
           </div>
         ) : (
-          <div className="absolute inset-0 z-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900">
-            {/* Runway / Luma Shimmer Animation */}
-            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-500/10 to-transparent animate-[shimmer_2s_infinite]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.08)_0,transparent_70%)]" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-stone-950 via-amber-950/80 to-stone-950">
+            {/* Sunset Shimmer Animation */}
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-orange-500/15 to-transparent animate-[shimmer_2s_infinite]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,88,12,0.12)_0,transparent_70%)]" />
           </div>
         )}
 
         {/* Top Header Badge */}
         <div className="relative z-10 flex items-center justify-between w-full">
-          <div className="flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-neutral-900/80 backdrop-blur-md border border-neutral-700/50 shadow-md">
+          <div className="flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-stone-900/85 backdrop-blur-md border border-white/20 shadow-md">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
             </span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-neutral-200">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-200">
               {fullPreviewUrl ? "First Frame Live Preview" : "Generating Master Canvas"}
             </span>
           </div>
 
-          <div className="px-3 py-1 rounded-full bg-neutral-900/80 backdrop-blur-md border border-neutral-800 text-xs font-mono font-medium text-neutral-400">
+          <div className="px-3 py-1 rounded-full bg-stone-900/85 backdrop-blur-md border border-white/20 text-xs font-mono font-bold text-amber-200">
             {aspectRatio}
           </div>
         </div>
@@ -75,9 +75,9 @@ export default function LivePreviewCanvas({
         {/* Center Canvas Graphic / Status */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-4 my-auto">
           {!fullPreviewUrl && (
-            <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-purple-500/10 border border-purple-500/30 backdrop-blur-xl animate-pulse">
+            <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-orange-500/20 border border-orange-400/40 backdrop-blur-xl animate-pulse shadow-lg">
               <svg
-                className="w-10 h-10 text-purple-400 animate-spin-slow"
+                className="w-10 h-10 text-orange-400 animate-spin-slow"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -93,9 +93,9 @@ export default function LivePreviewCanvas({
           )}
 
           {error ? (
-            <p className="text-red-400 font-medium max-w-md px-4">{error}</p>
+            <p className="text-red-300 font-bold max-w-md px-4 drop-shadow-md">{error}</p>
           ) : (
-            <p className="text-lg md:text-xl font-medium text-neutral-100 drop-shadow-md max-w-md px-4 leading-relaxed">
+            <p className="text-lg md:text-xl font-bold text-white drop-shadow-lg max-w-md px-4 leading-relaxed">
               {statusMessage || "Initializing video pipeline..."}
             </p>
           )}
@@ -103,17 +103,17 @@ export default function LivePreviewCanvas({
 
         {/* Bottom Progress UI Bar */}
         <div className="relative z-10 w-full space-y-2">
-          <div className="flex items-center justify-between text-xs font-medium text-neutral-300 px-1">
-            <span className="text-neutral-400">Pipeline Progress</span>
-            <span className="font-mono text-purple-400 font-bold text-sm">
+          <div className="flex items-center justify-between text-xs font-bold text-stone-200 px-1 drop-shadow-xs">
+            <span className="text-stone-300 uppercase tracking-wider text-[11px]">Pipeline Progress</span>
+            <span className="font-mono text-orange-400 font-extrabold text-sm">
               {Math.min(100, Math.max(0, progress))}%
             </span>
           </div>
 
-          {/* Glowing Luma Progress Bar */}
-          <div className="w-full h-2.5 bg-neutral-900/90 rounded-full overflow-hidden border border-neutral-800 backdrop-blur-md relative p-0.5">
+          {/* Glowing Sunset Progress Bar */}
+          <div className="w-full h-3 bg-stone-950/80 rounded-full overflow-hidden border border-white/20 backdrop-blur-md relative p-0.5 shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 via-blue-500 to-pink-500 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(168,85,247,0.8)]"
+              className="h-full bg-gradient-to-r from-orange-600 via-amber-500 to-amber-300 rounded-full transition-all duration-500 shadow-[0_0_15px_rgba(234,88,12,0.8)]"
               style={{ width: `${Math.min(100, Math.max(5, progress))}%` }}
             />
           </div>
