@@ -34,7 +34,7 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
   return (
     <form onSubmit={handleGenerateClick} className="glass-card rounded-3xl p-6 md:p-8 shadow-2xl transition-all duration-300 border border-white/70">
       <textarea
-        className="w-full glass-input rounded-2xl p-5 text-stone-900 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent resize-none transition-all duration-300 text-base md:text-lg leading-relaxed shadow-inner"
+        className="w-full bg-white/85 border border-white/90 rounded-2xl p-5 text-stone-950 font-medium placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:bg-white resize-none transition-all duration-300 text-base md:text-lg leading-relaxed shadow-inner"
         rows={5}
         placeholder="Describe your scene in detail... (e.g. A high-speed pursuit through a glowing futuristic metropolis at sunset, cinematic camera movement, 8k render)"
         value={prompt}
@@ -45,19 +45,19 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
         <div className="flex flex-wrap items-center gap-6">
           {/* Duration Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider">
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
               Duration
             </label>
-            <div className="flex bg-white/50 border border-white/80 rounded-2xl p-1 shadow-xs backdrop-blur-md">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {[5, 10, 15].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setTotalDuration(val)}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     totalDuration === val
-                      ? "bg-stone-900 text-amber-200 shadow-md scale-[1.02]"
-                      : "text-stone-700 hover:text-stone-950 hover:bg-white/40"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {val}s
@@ -68,10 +68,10 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
 
           {/* Aspect Ratio Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider">
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
               Aspect Ratio
             </label>
-            <div className="flex bg-white/50 border border-white/80 rounded-2xl p-1 shadow-xs backdrop-blur-md">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {[
                 { label: "16:9 Landscape", value: "16:9" },
                 { label: "9:16 Portrait", value: "9:16" },
@@ -80,10 +80,10 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
                   key={opt.value}
                   type="button"
                   onClick={() => setAspectRatio(opt.value)}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     aspectRatio === opt.value
-                      ? "bg-stone-900 text-amber-200 shadow-md scale-[1.02]"
-                      : "text-stone-700 hover:text-stone-950 hover:bg-white/40"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {opt.label}
@@ -94,19 +94,19 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
 
           {/* Quality Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider">
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
               Quality Preset
             </label>
-            <div className="flex bg-white/50 border border-white/80 rounded-2xl p-1 shadow-xs backdrop-blur-md">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {["720p", "1080p"].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setQuality(val)}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 cursor-pointer ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     quality === val
-                      ? "bg-stone-900 text-amber-200 shadow-md scale-[1.02]"
-                      : "text-stone-700 hover:text-stone-950 hover:bg-white/40"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {val}

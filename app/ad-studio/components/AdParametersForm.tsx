@@ -40,7 +40,7 @@ export function AdParametersForm({
       {/* Step 2: Product Info & Target Platform */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+          <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
             Product Title / Keyword <span className="text-orange-600">*</span>
           </label>
           <input
@@ -48,17 +48,17 @@ export function AdParametersForm({
             value={productTitle}
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="e.g., Wireless Noise-Canceling Earbuds"
-            className="w-full glass-input rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all font-medium"
+            className="w-full bg-white/85 border border-white/90 rounded-xl px-3.5 py-2 text-xs text-stone-950 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:bg-white transition-all font-medium shadow-xs"
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+          <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
             Target Ad Platform
           </label>
           <select
             value={targetPlatform}
             onChange={(e) => onPlatformChange(e.target.value)}
-            className="w-full glass-input rounded-xl px-3.5 py-2 text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-orange-600 transition-all font-medium"
+            className="w-full bg-white/85 border border-white/90 rounded-xl px-3.5 py-2 text-xs text-stone-950 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:bg-white transition-all font-medium shadow-xs"
           >
             <option value="TikTok / Reels (9:16 Vertical)" className="bg-stone-900 text-stone-100">TikTok / Reels (9:16 Vertical)</option>
             <option value="YouTube Shorts (9:16 Vertical)" className="bg-stone-900 text-stone-100">YouTube Shorts (9:16 Vertical)</option>
@@ -69,7 +69,7 @@ export function AdParametersForm({
 
       {/* Step 3: Preset Styles */}
       <div className="space-y-2">
-        <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+        <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
           Select Ad Style Template
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -81,17 +81,17 @@ export function AdParametersForm({
                 onClick={() => onTemplateChange(style.title)}
                 className={`p-3 rounded-xl border transition-all duration-300 cursor-pointer space-y-1 hover:scale-[1.02] ${
                   isSelected
-                    ? "bg-stone-900 text-amber-200 border-white/30 shadow-md"
-                    : "bg-white/40 border-white/60 text-stone-800 hover:bg-white/60"
+                    ? "bg-stone-950 text-amber-200 border-stone-800 shadow-md"
+                    : "bg-white/60 border-white/90 text-stone-800 hover:bg-white/90"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <p className={`text-xs font-extrabold ${isSelected ? "text-amber-200" : "text-stone-900"}`}>
+                  <p className={`text-xs font-extrabold ${isSelected ? "text-amber-200" : "text-stone-950"}`}>
                     {style.title}
                   </p>
                   {isSelected && <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />}
                 </div>
-                <p className={`text-[10px] leading-snug font-medium ${isSelected ? "text-amber-100/80" : "text-stone-700"}`}>{style.desc}</p>
+                <p className={`text-[10px] leading-snug font-medium ${isSelected ? "text-amber-100/90" : "text-stone-700"}`}>{style.desc}</p>
               </div>
             );
           })}
@@ -100,11 +100,11 @@ export function AdParametersForm({
 
       {/* Step 4: Ad Creative Prompt / Scene Details */}
       <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+        <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
           Ad Creative Details & Scene Description <span className="text-[10px] text-stone-600 font-normal lowercase">(optional)</span>
         </label>
         <textarea
-          className="w-full glass-input rounded-xl p-3 text-stone-900 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-orange-600 resize-none transition-all duration-300 text-xs leading-relaxed font-medium"
+          className="w-full bg-white/85 border border-white/90 rounded-xl p-3 text-stone-950 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:bg-white resize-none transition-all duration-300 text-xs leading-relaxed font-medium shadow-xs"
           rows={2.5}
           placeholder="Describe the setting, model, action, or visual mood..."
           value={customPrompt}

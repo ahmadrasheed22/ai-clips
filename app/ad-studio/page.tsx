@@ -111,68 +111,68 @@ export default function ProductAdStudioPage() {
   };
 
   return (
-    <main className="h-screen bg-sunset-gradient text-stone-900 p-4 md:p-6 flex flex-col items-center font-sans relative overflow-hidden">
+    <main className="min-h-screen bg-sunset-gradient text-stone-900 p-4 md:p-8 pb-16 md:pb-24 flex flex-col items-center font-sans relative overflow-x-hidden">
       {/* Ambient Radial Gradient Blobs for Depth */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[550px] bg-amber-500/20 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-orange-600/15 rounded-full blur-[130px] pointer-events-none" />
 
-      <div className="max-w-[1600px] w-full h-[calc(100vh-40px)] md:h-[calc(100vh-50px)] overflow-hidden flex flex-col space-y-4 relative z-10 mx-auto px-2 md:px-4">
+      <div className="max-w-7xl w-full mx-auto space-y-6 relative z-10">
         {/* Navigation Header Bar */}
-        <div className="flex items-center justify-between border-b border-stone-900/15 pb-2.5 pt-1 flex-shrink-0">
+        <div className="flex items-center justify-between border-b border-white/20 pb-3 pt-1">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-800 hover:text-stone-950 transition-all bg-white/40 hover:bg-white/60 border border-white/60 rounded-xl px-3.5 py-2 backdrop-blur-md shadow-xs hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white hover:text-amber-100 transition-all bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl px-4 py-2 backdrop-blur-md shadow-md hover:scale-[1.02]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Hub
           </Link>
-          <span className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-stone-900 text-amber-200 border border-white/20 flex items-center gap-2 shadow-md">
+          <span className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-stone-950 text-amber-200 border border-white/20 flex items-center gap-2 shadow-md">
             <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
             Product Ad Studio
           </span>
         </div>
 
         {/* Hero Section Header */}
-        <header className="text-left space-y-1 flex-shrink-0">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/40 border border-white/60 text-stone-900 text-xs font-bold uppercase tracking-wider shadow-xs">
+        <header className="text-left space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/30 text-amber-100 text-xs font-bold uppercase tracking-wider shadow-xs backdrop-blur-md">
             ✨ E-Commerce Video Studio
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-stone-900 drop-shadow-xs">
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md">
             Product Ad Generator
           </h1>
-          <p className="text-stone-700 text-xs md:text-sm font-medium max-w-3xl">
+          <p className="text-amber-100/90 text-xs md:text-sm font-medium max-w-3xl drop-shadow-xs">
             Transform multi-angle product photos into high-converting video ads for TikTok, Instagram Reels, and Meta Ads.
           </p>
         </header>
 
         {/* Display Error Message Toast if any */}
         {errorMessage && (
-          <div className="glass-card border-red-500/50 rounded-xl p-3 text-xs flex items-center justify-between text-red-800 flex-shrink-0 shadow-lg font-medium">
+          <div className="glass-card border-red-500/50 rounded-xl p-4 text-xs flex items-center justify-between text-red-900 shadow-lg font-bold">
             <span>⚠️ {errorMessage}</span>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-red-700 hover:text-red-900 underline font-bold ml-4"
+              className="text-red-700 hover:text-red-950 underline font-extrabold ml-4"
             >
               Dismiss
             </button>
           </div>
         )}
 
-        {/* Split-Screen 2-Column Responsive Dashboard Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch flex-1 min-h-0 overflow-hidden">
-          {/* Left Column (5 Cols): Form Parameters with Glass Card & Internal Scroll */}
-          <div className="lg:col-span-5 h-full overflow-y-auto pr-2 custom-scrollbar">
+        {/* Balanced & Centered 2-Column Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start lg:items-stretch w-full">
+          {/* Left Column: Form Parameters with Glass Card */}
+          <div className="lg:col-span-1 w-full">
             <form
               onSubmit={handleFormSubmit}
-              className="glass-card rounded-2xl p-4.5 space-y-4 shadow-xl border border-white/70"
+              className="glass-card rounded-3xl p-5 md:p-7 space-y-4.5 shadow-xl border border-white/70"
             >
-              <div className="border-b border-stone-900/10 pb-2.5">
-                <h2 className="text-base font-extrabold text-stone-900 flex items-center gap-2">
+              <div className="border-b border-stone-900/10 pb-3">
+                <h2 className="text-lg font-extrabold text-stone-950 flex items-center gap-2">
                   <span>⚙️ Ad Configuration</span>
                 </h2>
-                <p className="text-xs text-stone-700 font-medium mt-0.5">
+                <p className="text-xs text-stone-800 font-medium mt-0.5">
                   Customize image, platform, and prompt details.
                 </p>
               </div>
@@ -203,8 +203,8 @@ export default function ProductAdStudioPage() {
             </form>
           </div>
 
-          {/* Right Column (7 Cols): Full Height Centered Stepper OR Video Result OR Idle Preview */}
-          <div className="lg:col-span-7 h-full flex flex-col items-center justify-center min-h-0 overflow-hidden">
+          {/* Right Column: Balanced Stepper OR Video Result OR Idle Preview */}
+          <div className="lg:col-span-1 w-full flex flex-col items-center justify-center min-h-[450px]">
             {isSubmitting ? (
               <GenerationProgressStepper
                 currentStep={currentStep}
@@ -229,7 +229,7 @@ export default function ProductAdStudioPage() {
 
 function AdPreviewPlaceholder() {
   return (
-    <div className="glass-card border border-white/70 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col items-center justify-center text-center space-y-5 h-full max-h-full w-full relative overflow-hidden">
+    <div className="glass-card border border-white/70 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center justify-center text-center space-y-5 h-full w-full relative overflow-hidden min-h-[450px]">
       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-600 to-amber-600 text-white flex items-center justify-center shadow-lg shadow-orange-950/20">
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -242,10 +242,10 @@ function AdPreviewPlaceholder() {
       </div>
 
       <div className="max-w-md space-y-2">
-        <h3 className="text-xl font-extrabold text-stone-900">Studio Ad Preview & Output</h3>
-        <p className="text-stone-700 text-xs md:text-sm leading-relaxed font-medium">
+        <h3 className="text-xl font-extrabold text-stone-950">Studio Ad Preview & Output</h3>
+        <p className="text-stone-800 text-xs md:text-sm leading-relaxed font-medium">
           Configure your product title and upload a photo on the left panel, then click{" "}
-          <span className="text-orange-900 font-bold">&quot;Create Product Video Ad&quot;</span> to begin real-time Vision AI scripting and HD video generation.
+          <span className="text-orange-950 font-extrabold">&quot;Create Product Video Ad&quot;</span> to begin real-time Vision AI scripting and HD video generation.
         </p>
       </div>
 
@@ -253,17 +253,17 @@ function AdPreviewPlaceholder() {
         <div className="bg-white/50 border border-white/80 rounded-xl p-3.5 text-center space-y-1 shadow-xs backdrop-blur-md">
           <span className="text-lg">📱</span>
           <p className="text-xs font-bold text-stone-900">Multi-Platform</p>
-          <p className="text-[11px] text-stone-700 font-medium">Native TikTok & Reels (9:16)</p>
+          <p className="text-[11px] text-stone-800 font-medium">Native TikTok & Reels (9:16)</p>
         </div>
         <div className="bg-white/50 border border-white/80 rounded-xl p-3.5 text-center space-y-1 shadow-xs backdrop-blur-md">
           <span className="text-lg">🎯</span>
           <p className="text-xs font-bold text-stone-900">Product Locking</p>
-          <p className="text-[11px] text-stone-700 font-medium">Preserves original product photo</p>
+          <p className="text-[11px] text-stone-800 font-medium">Preserves original product photo</p>
         </div>
         <div className="bg-white/50 border border-white/80 rounded-xl p-3.5 text-center space-y-1 shadow-xs backdrop-blur-md">
           <span className="text-lg">⚡</span>
           <p className="text-xs font-bold text-stone-900">1080p HD Export</p>
-          <p className="text-[11px] text-stone-700 font-medium">High bitrate FFmpeg render</p>
+          <p className="text-[11px] text-stone-800 font-medium">High bitrate FFmpeg render</p>
         </div>
       </div>
     </div>

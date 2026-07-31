@@ -106,32 +106,32 @@ export default function StudioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-sunset-gradient text-stone-900 p-6 md:p-12 flex flex-col items-center font-sans relative overflow-hidden">
+    <main className="min-h-screen bg-sunset-gradient text-stone-900 p-4 md:p-8 pb-16 md:pb-24 flex flex-col items-center font-sans relative overflow-hidden">
       {/* Background Glowing Ambient Light */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-amber-500/20 via-orange-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-5xl w-full space-y-10 relative z-10 my-auto">
+      <div className="max-w-5xl w-full space-y-8 relative z-10 mx-auto my-auto">
         {/* Navigation Bar */}
-        <div className="flex items-center justify-between border-b border-stone-900/15 pb-4 pt-2">
+        <div className="flex items-center justify-between border-b border-white/20 pb-4 pt-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-800 hover:text-stone-950 transition-all bg-white/40 hover:bg-white/60 border border-white/60 rounded-xl px-4 py-2 backdrop-blur-md shadow-sm hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white hover:text-amber-100 transition-all bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl px-4 py-2 backdrop-blur-md shadow-md hover:scale-[1.02]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Hub
           </Link>
-          <span className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-stone-900 text-amber-200 border border-white/20 shadow-md">
+          <span className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-stone-950 text-amber-200 border border-white/20 shadow-md">
             Cinematic Studio
           </span>
         </div>
 
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-stone-900 drop-shadow-xs">
+        <header className="text-center space-y-3">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-md">
             AI Director Studio
           </h1>
-          <p className="text-stone-800 text-base md:text-lg max-w-2xl mx-auto font-medium">
+          <p className="text-amber-100/90 text-base md:text-lg max-w-2xl mx-auto font-medium drop-shadow-xs">
             Bring your ideas to life. Describe your scene below and let the AI direct the video for you.
           </p>
         </header>

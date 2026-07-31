@@ -59,7 +59,7 @@ export function ImageDropzone({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="block text-xs font-bold text-stone-900 uppercase tracking-wider">
+        <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
           1. Upload Product Photos (Multi-Angle)
         </label>
         {hasImages && (
