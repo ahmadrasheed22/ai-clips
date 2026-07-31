@@ -32,31 +32,32 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
   const showSpinner = isGenerating || isLoading;
 
   return (
-    <form onSubmit={handleGenerateClick} className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:border-neutral-700">
+    <form onSubmit={handleGenerateClick} className="glass-card rounded-3xl p-6 md:p-8 shadow-2xl transition-all duration-300 border border-white/70">
       <textarea
-        className="w-full bg-neutral-950 border border-neutral-800 rounded-2xl p-5 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all duration-300 text-lg leading-relaxed shadow-inner"
+        className="w-full bg-white/85 border border-white/90 rounded-2xl p-5 text-stone-950 font-medium placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:bg-white resize-none transition-all duration-300 text-base md:text-lg leading-relaxed shadow-inner"
         rows={5}
-        placeholder="Describe your scene in detail... (e.g. A neon-lit cyberpunk city alleyway at midnight, cinematic lighting, 8k resolution)"
+        placeholder="Describe your scene in detail... (e.g. A high-speed pursuit through a glowing futuristic metropolis at sunset, cinematic camera movement, 8k render)"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
       />
-      <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+      <div className="mt-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="flex flex-wrap items-center gap-6">
           {/* Duration Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
               Duration
             </label>
-            <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {[5, 10, 15].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setTotalDuration(val)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     totalDuration === val
-                      ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
-                      : "text-neutral-400 hover:text-neutral-200"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {val}s
@@ -67,22 +68,22 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
 
           {/* Aspect Ratio Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
               Aspect Ratio
             </label>
-            <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {[
-                { label: "16:9 (Landscape)", value: "16:9" },
-                { label: "9:16 (Portrait)", value: "9:16" },
+                { label: "16:9 Landscape", value: "16:9" },
+                { label: "9:16 Portrait", value: "9:16" },
               ].map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setAspectRatio(opt.value)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     aspectRatio === opt.value
-                      ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
-                      : "text-neutral-400 hover:text-neutral-200"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {opt.label}
@@ -93,19 +94,19 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
 
           {/* Quality Selector */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider">
-              Quality
+            <label className="block text-xs font-extrabold text-stone-950 uppercase tracking-wider">
+              Quality Preset
             </label>
-            <div className="flex bg-neutral-950 border border-neutral-800 rounded-xl p-1">
+            <div className="flex bg-white/70 border border-white/90 rounded-2xl p-1 shadow-xs backdrop-blur-md">
               {["720p", "1080p"].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setQuality(val)}
-                  className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer ${
                     quality === val
-                      ? "bg-purple-600 text-white shadow-md shadow-purple-500/10"
-                      : "text-neutral-400 hover:text-neutral-200"
+                      ? "bg-stone-950 text-amber-200 shadow-md scale-[1.02]"
+                      : "text-stone-800 hover:text-stone-950 hover:bg-white/80"
                   }`}
                 >
                   {val}
@@ -119,7 +120,7 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
           <button
             type="submit"
             disabled={isSubmitDisabled}
-            className="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-3 text-lg"
+            className="w-full lg:w-auto px-9 py-4 bg-gradient-to-r from-orange-600 via-amber-600 to-amber-700 hover:from-orange-700 hover:to-amber-800 text-white font-bold rounded-2xl shadow-xl hover:scale-[1.02] hover:shadow-[0_12px_25px_rgba(234,88,12,0.35)] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-3 text-base cursor-pointer"
           >
             {showSpinner ? (
               <>
@@ -127,7 +128,7 @@ export default function GenerationForm({ onGenerate, isLoading = false }: Genera
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Generating...</span>
+                <span>Generating Video...</span>
               </>
             ) : (
               <>

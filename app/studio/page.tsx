@@ -106,29 +106,32 @@ export default function StudioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100 p-6 md:p-8 flex flex-col items-center font-sans">
-      <div className="max-w-4xl w-full space-y-8">
+    <main className="min-h-screen bg-sunset-gradient text-stone-900 p-4 md:p-8 pb-16 md:pb-24 flex flex-col items-center font-sans relative overflow-hidden">
+      {/* Background Glowing Ambient Light */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-amber-500/20 via-orange-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-5xl w-full space-y-8 relative z-10 mx-auto my-auto">
         {/* Navigation Bar */}
-        <div className="flex items-center justify-between border-b border-neutral-800/80 pb-4 pt-2">
+        <div className="flex items-center justify-between border-b border-white/20 pb-4 pt-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors bg-neutral-900/80 hover:bg-neutral-800 border border-neutral-800 rounded-lg px-3 py-1.5"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white hover:text-amber-100 transition-all bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl px-4 py-2 backdrop-blur-md shadow-md hover:scale-[1.02]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Hub
           </Link>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950/60 text-blue-400 border border-blue-800/50">
+          <span className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-stone-950 text-amber-200 border border-white/20 shadow-md">
             Cinematic Studio
           </span>
         </div>
 
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-2">
+        <header className="text-center space-y-3">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-md">
             AI Director Studio
           </h1>
-          <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+          <p className="text-amber-100/90 text-base md:text-lg max-w-2xl mx-auto font-medium drop-shadow-xs">
             Bring your ideas to life. Describe your scene below and let the AI direct the video for you.
           </p>
         </header>
@@ -147,9 +150,9 @@ export default function StudioPage() {
         )}
 
         {error && !isLoading && (
-          <div className="bg-red-950/30 border border-red-900/50 rounded-3xl p-6 text-center space-y-2">
-            <p className="text-red-400 font-medium">Generation Failed</p>
-            <p className="text-sm text-neutral-400">{error}</p>
+          <div className="glass-card border-red-500/40 rounded-3xl p-6 text-center space-y-2 shadow-lg">
+            <p className="text-red-700 font-bold text-base">Generation Failed</p>
+            <p className="text-sm text-stone-700 font-medium">{error}</p>
           </div>
         )}
 
